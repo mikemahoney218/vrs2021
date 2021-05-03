@@ -1,0 +1,92 @@
+```{r}
+library(sf)
+lodge_coords <- data.frame(y = 44.1585, x = -73.8624)
+lodge_coords <- st_as_sf(lodge_coords,  coords = c("x", "y"))
+lodge_coords <- st_set_crs(lodge_coords, 4326)
+
+st_write(lodge_coords, "lodge.shp")
+
+library(terrainr)
+lodge_bbox <- set_bbox_side_length(lodge_coords, (2^12+1) * 3)
+```
+
+```{r eval=FALSE}
+library(progressr)
+handlers("progress")
+
+with_progress(
+  lodge_tiles <- get_tiles(lodge_bbox, 
+                               "johns_brook", 
+                               services = c("elevation", "ortho"))
+  )
+```
+
+```{r echo=FALSE}
+library(progressr)
+handlers("progress")
+
+lodge_tiles <- vector("list", 2)
+names(lodge_tiles) <- c("elevation", "ortho")
+
+if (length(list.files("3dep")) == 0) {
+  with_progress(
+  lodge_tiles$elevation <- get_tiles(lodge_bbox, 
+                               "3dep/johns_brook", 
+                               services = "elevation")
+  )
+} else {
+  lodge_tiles$elevation <- paste0("3dep/", list.files("3dep"))
+}
+
+if (length(list.files("naip")) == 0) {
+  with_progress(
+  lodge_tiles$ortho <- get_tiles(lodge_bbox, 
+                               "naip/johns_brook", 
+                               services = "ortho")
+  )
+} else {
+  lodge_tiles$ortho <- paste0("naip/", list.files("naip"))
+}
+```
+
+```{r eval = FALSE}
+merge_rasters(lodge_tiles$elevation, "merged_johns_brook_dem.tif")
+merge_rasters(lodge_tiles$ortho, "merged_johns_brook_ortho.tif")
+```
+
+```{r echo = FALSE}
+if (!file.exists("merged_johns_brook_dem.tif")) {
+  merge_rasters(lodge_tiles$elevation, "merged_johns_brook_dem.tif")
+}
+
+if (!file.exists("merged_johns_brook_ortho.tif")) {
+  merge_rasters(lodge_tiles$ortho, "merged_johns_brook_ortho.tif")
+}
+```
+
+```{r eval = FALSE}
+vector_to_overlay(lodge_coords,
+                  "merged_johns_brook_dem.tif",
+                  color = "red",
+                  size = 10,
+                  output_file = "point_location.png")
+```
+
+
+```{r echo = FALSE}
+if (!file.exists("point_location.png")) {
+  vector_to_overlay(lodge_coords,
+                  "merged_johns_brook_dem.tif",
+                  color = "red",
+                  size = 10,
+                  output_file = "point_location.png")
+}
+```
+
+```{r eval = FALSE}
+library(terrainr)
+raster_to_raw_tiles("merged_johns_brook_ortho.tif", "ortho_tiles/ortho", raw = FALSE)
+raster_to_raw_tiles("merged_johns_brook_viewshed_image.tif", "viewshed_tiles/viewshed", raw = FALSE)
+raster_to_raw_tiles("point_location.tif", "point/point", raw = FALSE)
+raster_to_raw_tiles("merged_johns_brook_dem.tif", "heightmap")
+```
