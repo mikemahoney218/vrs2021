@@ -74,25 +74,95 @@ intuitively understandable for a generalist audience, serving as an effective
 tool for translating between stakeholders in an environmental decision making 
 process.
 
-# The `terrainr` R package
-
 # Viewshed Analyses with `terrainr`
 
-To illustrate how these features may be applied to visual resources stewardship,
-we will walk through visualizing an example viewshed analysis using `terrainr` 
-and Unity. As an example, we will examine the potential visual impact of the 
-Johns Brook Lodge building, located within the Adirondack High Peaks, 
-All the code involved in this process has been included as Figure 
-\@ref(fig:code_required).
+To illustrate the potential of high-resolution 3D simulations for visual 
+resources management, we will walk through an example viewshed analysis using 
+both traditional 2D mapping and Unity. As an example, we will examine the 
+viewshed impacted by the Johns Brook Lodge building, a privately operated resort
+located within the Eastern High Peaks wilderness area of the Adirondack State 
+Park. All code required to reproduce this section is included as Figure 1; we 
+will not focus on defining functions and parameters here but rather defer to the 
+documentation provided with the `sf` and `terrainr` packages [@sf; @terrainr].
 
-```{r code_required, fig.cap="All the R code required for the visualizations incorporated in this paper. In addition, viewshed calculation was done using GRASS GIS version 7.8, with the outputs saved as an image using QGIS. Descriptions of functions and their arguments is available online at https://docs.ropensci.org/terrainr/"}
+```{r code_required, out.width='100%', fig.cap="All the R code required for the visualizations incorporated in this paper. In addition, viewshed calculation was done using GRASS GIS version 7.8, with the outputs saved as an image using QGIS. Descriptions of functions and their arguments is available online at https://docs.ropensci.org/terrainr/"}
 knitr::include_graphics("images/carbon.png")
+```
+
+The initial step in this process is to define our area of interest. We first 
+define a point located at Johns Brook Lodge (44.1585$^{\circ}$ N, 
+73.8624$^{\circ}$ W), then convert it into a "simple features" object using the 
+WGS 1984 coordinate reference system (EPSG code 4326) using functions provided 
+by the `sf` package [@sf]. Next, we use functions from `terrainr` to define a 
+bounding box centered on the lodge, with side lengths of 12,200 meters. We then
+are able to use this bounding box to download a bare earth digital elevation 
+model (DEM) and orthoimagery from the USGS National Map [@TNM]. As the USGS
+National Map is not able to return rasters representing our full bounding box
+in a single query, the `get_tiles` function returns our data as a set of 
+multiple map tiles, which we are then able to merge into cohesive individual 
+rasters using the `merge_rasters` function. With approximately ten lines of 
+code, we are able to define our area of interest, retrieve public domain data
+for this area, and process the downloaded data into singular files which are 
+easier to work with than separate tiles.
+
+Unfortunately, identifying viewsheds cannot be implemented so easily. For this
+process, we instead turn to the GRASS GIS function `r.viewshed`, run 
+interactively through the QGIS interface [@GRASS_GIS_software; QGIS_software].
+By instructing the program to produce a boolean raster, indicating only whether
+a given pixel is or is not able to see the lodge, we produce the viewshed map 
+presented as Figure 2. By changing the default symbology of the map such that 
+the viewsheds are entirely transparent, and the other areas a slightly 
+transparent black, we can overlay this raster upon orthoimagery to produce a 
+more contextualized map; this is presented as Figure 3.
+
+```{r boolean_viewshed, out.width='100%', fig.cap="A map showing the visibility of the Johns Brook Lodge (red dot). Yellow polygons are able to see the lodge, while purple regions cannot."}
+knitr::include_graphics("images/boolean_viewshed.png")
 ```
 
 
 
-`sf` package [@sf]
 
+```{r ortho_viewshed, out.width='100%', fig.cap="A map showing the visibility of the Johns Brook Lodge (red dot). Brighter regions are able to see the lodge, while shaded areas cannot."}
+knitr::include_graphics("images/ortho_viewshed.jpg")
+```
+
+At this point, we save our re-symbolized raster as an image and return to R to
+produce our 3D visualization. In our final lines of code, we produce an 
+additional raster image containing a red dot at our lodge, and then produce map
+tiles which may be imported into Unity through repeated use of the 
+`raster_to_raw_tiles` function. By importing these tiles into Unity, a process 
+documented by the "Importing terrainr tiles into Unity" vignette included with 
+the package, we are able to quickly produce a 3D replica of this visualization
+inside the game engine. When viewed isometrically from above (Figure 4), this 
+rendering is incredibly similar to Figure 3; the only obvious evidence this is a 
+different image is the smaller marker indicating the lodge.
+
+```{r, out.width='100%'}
+knitr::include_graphics("images/above.jpg")
+```
+
+Of course, users are not restricted to viewing their landscape as a flat surface
+from above. By moving the camera throughout the scene, users are able to 
+investigate how viewsheds interact with terrain and features in orthoimagery 
+(Figure 5; Figure 6). This control allows for a new depth of interactivity with
+the visualization of model outputs; for instance, a user might validate the 
+results of the viewshed operation by placing themselves at the feature of 
+interest and searching for shaded regions (Figure 7). In total, this interactive
+3D model allows users a greater degree of autonomy when exploring model results
+and provides additional context not present in the 2D map incorporating the same
+data.
+
+```{r}
+knitr::include_graphics("images/closer.jpg")
+```
+
+```{r}
+knitr::include_graphics("images/further.jpg")
+```
+
+```{r, out.width='100%'}
+knitr::include_graphics("images/centered.jpg")
+```
 
 # Discussion
 
