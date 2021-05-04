@@ -1,28 +1,103 @@
 ---
-title: "Untitled"
+title: "Interactive 3D visualizations of environmental data using the `terrainr` `R` package"
+author: "Michael J. Mahoney, Graduate Program in Environmental Science, State University of New York College of Environmental Science and Forestry; Colin M. Beier, Department of Sustainable Resources Management, State University of New York College of Environmental Science and Forestry; Aidan C. Ackerman, Department of Landscape Architecture, State University of New York College of Environmental Science and Forestry"
+csl: chicago-author-date.csl
+bibliography: paper.bib
 output: bookdown::word_document2
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## R Markdown
+# Introduction
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Environmental decision making is a complex process, requiring 
+stakeholders of varying educational and professional backgrounds to communicate 
+and negotiate about differing environmental value systems to determine a 
+mutually-agreeable course of action. One of the key challenges in this process 
+is the translation of background knowledge and expertise between stakeholders, 
+particularly as members of the public become increasingly involved in making 
+landscape management decisions. For this reason, visualizations have often been 
+described as a "common language" which may help stakeholders understand one 
+another more effectively, allowing stakeholder values, background knowledge, and
+statistical information to be communicated in a more intuitively understandable 
+format [@Nicholson2005]. In particular, interactive visualizations may allow 
+stakeholders with less formal training more agency to explore data and 
+simulations on their own, potentially identifying preferred alternatives or 
+problematic assumptions baked into the presented analysis. To this end, 
+interactive simulations have been used
+for engaging the public to great effect in domains such as transportation 
+policy [@Lovelace2020] and urban planning [@Pettit2015].
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+However, many environmental problems don't lend themselves to the types of 
+interactive graphics that have flourished elsewhere While some metrics
+may be easily plotted, others (such as visual impact, ecological integrity, or 
+land management histories) require more context than can be communicated through
+standard visualizations. While interactive 2D maps are able to provide some 
+spatial context to data, they often still require users to think about a 
+landscape in a highly abstract way, attempting to match colors on a map to 
+regions of a color key located elsewhere, match symbols to values in a legend 
+(or to values implicitly assumed to be understood), and to convert pixel 
+distances and areas into their real world equivalents. This level of abstraction
+can make maps rather difficult to understand, limiting their value as a 
+translational tool [@Ottosson1988].
 
-```{r cars}
-summary(cars)
+This limitation may be overcome by creating more true-to-life renderings of an 
+area of interest, visualizing landscapes more similarly to how they might appear
+in the real world. TK ALREADY DONE FOR VISUAL RESOURCES TK. 
+These visualizations are more effective when produced at higher resolutions, 
+with increased realism and visual fidelity [@Appleton2003]; however, producing 
+these highly realistic renderings typically requires more computational power 
+and technical knowledge than more abstract 2D maps.
+
+Game engines have been proposed as a potential solution for the demanding 
+requirements of producing these renderings [@Herwig2002]. These programs, 
+specifically tuned to render terrain at high resolutions quickly 
+enough so that players in a video game won't notice any computation lag, can 
+simulate large-scale landscapes using mass market computer equipment. The most 
+popular of these engines, the Unity real-time development 
+platform [@Unity], has been used to produce 3D landscape visualizations since 
+at least 2010 [@Wang2010]. However, while Unity solves many of the computational 
+obstacles to the use of large-scale 3D renderings, it still demands a high 
+level of skill and familiarity for users to produce landscape visualizations.
+Perhaps for this reason, Unity is still under-utilized as a tool for 3D 
+landscape visualization.
+
+This paper describes the `terrainr` package [@terrainr], an extension for the
+open source R programming language [@R] which assists users in retrieving, 
+manipulating, and transforming spatial data for importing to Unity, and 
+illustrates how this package may be used as part of a workflow for visualizing 
+visual impacts and viewsheds. By depicting landscapes in a more concrete form 
+than typical 2D maps, this workflow produces renderings that may be more 
+intuitively understandable for a generalist audience, serving as an effective 
+tool for translating between stakeholders in an environmental decision making 
+process.
+
+# The `terrainr` R package
+
+# Viewshed Analyses with `terrainr`
+
+To illustrate how these features may be applied to visual resources stewardship,
+we will walk through visualizing an example viewshed analysis using `terrainr` 
+and Unity. As an example, we will examine the potential visual impact of the 
+Johns Brook Lodge building, located within the Adirondack High Peaks, 
+All the code involved in this process has been included as Figure 
+\@ref(fig:code_required).
+
+```{r code_required, fig.cap="All the R code required for the visualizations incorporated in this paper. In addition, viewshed calculation was done using GRASS GIS version 7.8, with the outputs saved as an image using QGIS. Descriptions of functions and their arguments is available online at https://docs.ropensci.org/terrainr/"}
+knitr::include_graphics("images/carbon.png")
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+`sf` package [@sf]
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Discussion
+
+# Conclusion
+
+\newpage{}
+
+# References {#references .unnumbered}

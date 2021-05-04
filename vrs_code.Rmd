@@ -79,7 +79,7 @@ if (!file.exists("point_location.png")) {
                   "merged_johns_brook_dem.tif",
                   color = "red",
                   size = 10,
-                  output_file = "point_location.png")
+                  output_file = "point_location.tiff")
 }
 ```
 
