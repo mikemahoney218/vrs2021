@@ -1,7 +1,34 @@
 ---
 title: "Interactive 3D visualizations of environmental data using the `terrainr` `R` package"
 author: "Michael J. Mahoney, Graduate Program in Environmental Science, State University of New York College of Environmental Science and Forestry; Colin M. Beier, Department of Sustainable Resources Management, State University of New York College of Environmental Science and Forestry; Aidan C. Ackerman, Department of Landscape Architecture, State University of New York College of Environmental Science and Forestry"
+abstract: |
+    Abstract
+    
+    Assessing visual resources to inform environmental decision-making typically 
+    requires developing 3D renderings of the landscape, allowing 
+    stakeholders to contextualize the impacts of a decision on the surrounding 
+    area. In particular, visualizations can be particularly valuable for
+    improving public participation in decision-making activities, serving as a 
+    "common language" or "translation layer" for communication between expert and 
+    generalist audiences. These visualizations are more effective 
+    when they are higher resolution, with increased realism and visual fidelity; 
+    however, producing these sorts of highly-effective 
+    visualizations has historically required designers to have access to larger 
+    amounts of computational power and technical knowledge than more traditional 
+    forms of scientific visualization.
+    
+    This paper introduces a new method for developing these interactive 
+    visualizations, leveraging the Unity 3D rendering engine and the R 
+    programming language to programmatically produce high-resolution 3D 
+    landscape simulations. By walking through how this process might be applied 
+    to a standard viewshed analysis, we demonstrate the advantages of this 
+    interactive format in allowing the user to more easily investigate 
+    presented data and modeled outcomes. Through manual adjustment to further
+    improve realism and simulate management outcomes, this technique has the 
+    potential to be useful in a wide array of visual resources applications.
+
 csl: chicago-author-date.csl
+numbersections: false
 bibliography: paper.bib
 output: bookdown::word_document2
 ---
@@ -15,16 +42,17 @@ knitr::opts_chunk$set(echo = FALSE)
 Environmental decision making is a complex process, requiring 
 stakeholders of varying educational and professional backgrounds to communicate 
 and negotiate about differing environmental value systems to determine a 
-mutually-agreeable course of action. One of the key challenges in this process 
+mutually-agreeable course of action [@Metze2020]. One of the key challenges in 
+this process 
 is the translation of background knowledge and expertise between stakeholders, 
 particularly as members of the public become increasingly involved in making 
-landscape management decisions. For this reason, visualizations have often been 
-described as a "common language" which may help stakeholders understand one 
+decisions about landscape management. For this reason, visualizations have often 
+been described as a "common language" which may help stakeholders understand one 
 another more effectively, allowing stakeholder values, background knowledge, and
 statistical information to be communicated in a more intuitively understandable 
 format [@Nicholson2005]. In particular, interactive visualizations may allow 
 stakeholders with less formal training more agency to explore data and 
-simulations on their own, potentially identifying preferred alternatives or 
+modeled outcomes on their own, potentially identifying preferred alternatives or 
 problematic assumptions baked into the presented analysis. To this end, 
 interactive simulations have been used
 for engaging the public to great effect in domains such as transportation 
@@ -45,11 +73,13 @@ translational tool [@Ottosson1988].
 
 This limitation may be overcome by creating more true-to-life renderings of an 
 area of interest, visualizing landscapes more similarly to how they might appear
-in the real world. TK ALREADY DONE FOR VISUAL RESOURCES TK. 
+in the real world. This practice is already prevalent in visual resources 
+management, with realistic renderings of proposed management activity a common
+stage in many decision making processes [@Molina2011; @Szumilas2019].
 These visualizations are more effective when produced at higher resolutions, 
 with increased realism and visual fidelity [@Appleton2003]; however, producing 
 these highly realistic renderings typically requires more computational power 
-and technical knowledge than more abstract 2D maps.
+and technical knowledge than more abstract 2D maps [@Paar2006].
 
 Game engines have been proposed as a potential solution for the demanding 
 requirements of producing these renderings [@Herwig2002]. These programs, 
@@ -115,14 +145,14 @@ the viewsheds are entirely transparent, and the other areas a slightly
 transparent black, we can overlay this raster upon orthoimagery to produce a 
 more contextualized map; this is presented as Figure 3.
 
-```{r boolean_viewshed, out.width='100%', fig.cap="A map showing the visibility of the Johns Brook Lodge (red dot). Yellow polygons are able to see the lodge, while purple regions cannot."}
+```{r boolean_viewshed, out.width='100%', fig.cap="A map showing the visibility of the Johns Brook Lodge (red dot), produced in QGIS. Yellow polygons are able to see the lodge, while purple regions cannot."}
 knitr::include_graphics("images/boolean_viewshed.png")
 ```
 
 
 
 
-```{r ortho_viewshed, out.width='100%', fig.cap="A map showing the visibility of the Johns Brook Lodge (red dot). Brighter regions are able to see the lodge, while shaded areas cannot."}
+```{r ortho_viewshed, out.width='100%', fig.cap="A map showing the visibility of the Johns Brook Lodge (red dot), produced in QGIS. Brighter regions are able to see the lodge, while shaded areas cannot."}
 knitr::include_graphics("images/ortho_viewshed.jpg")
 ```
 
@@ -137,7 +167,7 @@ inside the game engine. When viewed isometrically from above (Figure 4), this
 rendering is incredibly similar to Figure 3; the only obvious evidence this is a 
 different image is the smaller marker indicating the lodge.
 
-```{r, out.width='100%'}
+```{r, out.width='100%', fig.cap="A map showing the visibility of the Johns Brook Lodge (red dot), produced using the Unity rendering engine. Brighter regions are able to see the lodge, while shaded areas cannot."}
 knitr::include_graphics("images/above.jpg")
 ```
 
@@ -152,21 +182,75 @@ interest and searching for shaded regions (Figure 7). In total, this interactive
 and provides additional context not present in the 2D map incorporating the same
 data.
 
-```{r}
+```{r closer, fig.cap="A map showing the visibility of the Johns Brook Lodge (red dot), produced using the Unity rendering engine. Brighter regions are able to see the lodge, while shaded areas cannot. This image is taken facing towards the southwest, so that Mt. Marcy is approximately centered in the horizon. Users are able to manipulate the camera to reposition themselves throughout this scene and investigate model outputs in various regions."}
 knitr::include_graphics("images/closer.jpg")
 ```
 
-```{r}
+```{r further, fig.cap="A map showing the visibility of the Johns Brook Lodge (red dot), produced using the Unity rendering engine. Brighter regions are able to see the lodge, while shaded areas cannot. This image is taken from Algonquin Peak facing east towards Giant Mountain. Users are able to manipulate the camera to reposition themselves throughout this scene and investigate model outputs in various regions."}
 knitr::include_graphics("images/further.jpg")
 ```
 
-```{r, out.width='100%'}
+```{r centered, out.width='100%', fig.cap="A map showing the visibility of the Johns Brook Lodge (red dot), produced using the Unity rendering engine. This image, taken from the location of the lodge itself, is entirely highlighted, allowing users to verify that the viewshed algorithm has correctly identified areas which may be seen from the lodge."}
 knitr::include_graphics("images/centered.jpg")
 ```
 
 # Discussion
 
+Interactive visualizations present an exciting opportunity for engaging 
+stakeholders in environmental decision making processes, helping nonspecialist
+participants investigate data and models through friendlier interfaces than 
+those used by the professional analyst or researcher. In particular, 
+high-resolution landscape visualizations are particularly well suited for 
+communicating many classes of environmental data, given the importance of 
+spatial context to the interpretation of data and results. By making it easier
+to produce these visualizations, the `terrainr` package aims to make this tool
+more viable for land managers and environmental practitioners to incorporate 
+into their decision making and outreach processes.
+
+These 3D simulations are capable of effectively reproducing the outputs from 
+traditional GIS-based analyses (Figure 3, Figure 4), but then allow users the 
+freedom to explore the presented results in order to develop questions and draw
+their own conclusions about the performed analysis. This freedom may be 
+useful when seeking to engage external stakeholders in a decision making 
+process, as the interactivity allows users to surface and focus upon oddities 
+and assumptions in the presented results which may have been masked in static
+visuals. By the same token, however, these visualizations are inherently less 
+directed than static graphics or pre-developed video renditions, which may make 
+it harder to present arguments and persuade an audience through this medium. 
+Whether this is a benefit or a limitation of the approach is inherently 
+dependent upon the goals of any particular visualization project, as well as 
+one's beliefs about the roles of researchers and other stakeholders in 
+interpreting results and coming to decisions.
+
+The visualizations presented in this paper have purposefully been restricted to
+those which may be programmatically generated using only `terrainr` and other 
+publicly available open-source software products, without requiring a large 
+degree of manual design or manipulation to produce. However, the Unity engine is 
+capable of displaying hundreds or thousands of objects on top of these terrain 
+layers for more realistic simulations. This allows users to place, for example,
+purchased models of trees at strategic points throughout the landscape to 
+present the look and feel of a setting more realistically, or to place models of 
+wind turbines to demonstrate the expected impact of a development project. There
+does not exist at this time a way to programmatically develop objects for these
+renderings in the way `terrainr` aids in the development of terrain tiles; this 
+gap presents a clear direction for future work in this arena.
+
 # Conclusion
+
+Effective visualizations can serve as a critical "translation layer" for 
+environmental decision making, aiding in the communication of information and 
+value systems between stakeholders of different educational and professional 
+backgrounds. The increasing importance of public involvement in decision making
+processes has driven an increase in interactive visualizations, which may allow
+nonspecialists greater agency in investigating data and models and identifying 
+alternative solutions. To this end, this paper has presented a new method for 
+producing interactive 3D landscape visualizations, including a demonstration of 
+how the method might be applied to viewshed analyses. This method allows users
+to explore and validate presented results, and provides these results with more
+spatial context than most traditional 2D mapping approaches. If combined with 
+manual placement of objects such as trees, buildings, or wind turbines, this 
+class of visualization presents an exciting opportunity for many aspects of 
+visual resources management.
 
 \newpage{}
 
