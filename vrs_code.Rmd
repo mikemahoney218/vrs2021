@@ -90,3 +90,57 @@ raster_to_raw_tiles("merged_johns_brook_viewshed_image.tif", "viewshed_tiles/vie
 raster_to_raw_tiles("point_location.tif", "point/point", raw = FALSE)
 raster_to_raw_tiles("merged_johns_brook_dem.tif", "heightmap")
 ```
+
+```{r}
+library(raster)
+library(rgrass7)
+
+
+# Initialize GRASS GIS
+rgrass7::initGRASS(system("grass --config path", intern = TRUE), 
+                   raster::tmpDir(),
+                   mapset = "PERMANENT",
+                   override = TRUE)
+
+# Set our CRS equal to that of our merged elevation raster
+rgrass7::execGRASS(
+  "g.proj",
+  "c",
+  georef = "merged_johns_brook_dem.tif"
+)
+
+# Read our elevation raster into the GRASS session
+execGRASS("r.in.gdal",
+          c("overwrite", "o"),
+          input="merged_johns_brook_dem.tif", 
+          band=1, 
+          output="elevation")
+
+# Specify the region we want covered by the viewshed
+execGRASS("g.region",
+          raster="elevation")
+
+# Calculate the viewshed
+execGRASS("r.viewshed", 
+          c("b", "overwrite"),
+          input="elevation", 
+          coordinates=c(-73.8624,44.1585),
+          memory=500, 
+          output="viewshed")
+
+# Save our viewshed raster to file
+execGRASS("r.out.gdal",
+          c("t", "m", "overwrite"),
+          input="viewshed", 
+          output="viewshed.tif", 
+          format="GTiff", 
+          createopt="TFW=YES,COMPRESS=LZW")
+
+# Load our viewshed raster into R 
+# and set visible areas to transparent
+viewshed <- raster::raster("r_viewshed.tif")
+viewshed[viewshed > 0] <- NA
+
+# Save the viewshed raster
+writeRaster(viewshed, "boolean_viewshed.tif", overwrite = TRUE)
+```
