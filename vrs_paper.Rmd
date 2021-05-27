@@ -31,6 +31,7 @@ csl: chicago-author-date.csl
 numbersections: false
 bibliography: paper.bib
 output: bookdown::word_document2
+nocite: BLM
 ---
 
 ```{r setup, include=FALSE}
@@ -111,7 +112,15 @@ process.
 
 # Viewshed Analyses with terrainr
 
-To illustrate the potential of high-resolution 3D simulations for visual 
+Environmental decision making can be aided by conducting a Visual Impact 
+Assessment (VIA), defined by the United States Bureau of Land Management as “the 
+analysis of the potential visual impacts to the landscape and landscape views 
+resulting from a proposed development or land management action”. VIAs include 
+a large-scale viewshed analysis to evaluate visible areas of the landscape from 
+specific viewpoints. These analyses can be used to evaluate the potential of 
+mitigation measures to reduce or avoid impact to a particular view 
+[@Bates2009]. To illustrate the potential of high-resolution 3D 
+simulations for visual 
 resources management, we will walk through an example viewshed analysis using 
 both traditional 2D mapping and Unity. As an example, we will examine the 
 viewsheds (that is, the regions which are visible from a given location) 
