@@ -31,7 +31,8 @@ csl: chicago-author-date.csl
 numbersections: false
 bibliography: paper.bib
 output: bookdown::word_document2
-nocite: BLM
+nocite: |
+  @BLM
 ---
 
 ```{r setup, include=FALSE}
