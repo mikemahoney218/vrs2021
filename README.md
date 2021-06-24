@@ -16,7 +16,7 @@ _Johns Brook Lodge, in red, against orthoimagery, made using the Unity 3D game e
 
 And show how these interactive, high-resolution surfaces may aid in interpreting and evaluating model outputs.
 
-![](further_arrow.jpg)
+![](images/further_arrow.jpg)
 _A different angle of the viewshed surface in the Unity 3D engine, with the Johns Brook Lodge point highlighted by an arrow._
 
 The paper can be found at [vrs_2021.pdf](vrs_2021.pdf), was written in [vrs_paper.Rmd](vrs_paper.Rmd), and all the code required is in [vrs_code.R](vrs_code.R).
